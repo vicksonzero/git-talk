@@ -3,6 +3,34 @@
 Talk about your git strategy with this standardized presentation tool
 
 
+
+# Road Map
+
+- [ ] Construct a git tree in SVG by a series of events / commands:
+  - [ ] `time starts from 0, lane labels must be unique`
+  - [ ] `animated: [(true/false/"pop")]`
+  - [ ] `node: [nodeID, lane, time, title]`
+  - [ ] `connect: [edgeID, node1, node2, title?]`
+  - [ ] `next: [node, newNodeID, title]`
+  - [ ] `fork: [fromNode, newNodeID, lane, time, title]`
+  - [ ] `merge: [fromNode, newNodeID, lane, time, title]`
+  - [ ] `update: [node, title]`
+  - [ ] `clone: [node, newNodeID, lane, time, title]`
+  - [ ] `erase: [(node/edge/lane)]`
+  - [ ] `disable: [(node/edge/lane)]`
+  - [ ] `clear`
+  - [ ] `scroll: [fromTime]`
+- [ ] Render descriptions and step througheach diagrams
+- [ ] Support for animations
+
+
+
+
+
+
+
+
+
 <hr />
 
 
