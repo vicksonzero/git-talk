@@ -1,4 +1,4 @@
-import * as React from "react"
+import { useEffect, useState } from 'react'
 
 // styles
 const pageStyles = {
@@ -127,9 +127,21 @@ const links = [
 
 // markup
 const IndexPage = () => {
+
+  const [talkData, setTalkData] = useState('');
+
+  useEffect(async () => {
+    const user = `vicksonzero`;
+    const proj = `e9abc70be9bad406e12d6e9478748086`;
+    const file = `git-flow.yml`;
+    const content = await (await fetch(`https://gist.github.com/${user}/${proj}/raw/${file}`)).text();
+    setTalkData(content);
+  })
+
   return (
     <main style={pageStyles}>
       <title>Home Page</title>
+      <textarea>{talkData}</textarea>
       <h1 style={headingStyles}>
         Congratulations
         <br />

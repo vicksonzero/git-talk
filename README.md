@@ -4,23 +4,28 @@ Talk about your git strategy with this standardized presentation tool
 
 
 
+# talkML markup for describing git branching events, for the purpose of drawing them into a graph
+
 # Road Map
 
 - [ ] Construct a git tree in SVG by a series of events / commands:
-  - [ ] `time starts from 0, lane labels must be unique`
-  - [ ] `animated: [(true/false/"pop")]`
-  - [ ] `node: [nodeID, lane, time, title]`
-  - [ ] `connect: [edgeID, node1, node2, title?]`
-  - [ ] `next: [node, newNodeID, title]`
-  - [ ] `fork: [fromNode, newNodeID, lane, time, title]`
-  - [ ] `merge: [fromNode, newNodeID, lane, time, title]`
-  - [ ] `update: [node, title]`
-  - [ ] `clone: [node, newNodeID, lane, time, title]`
-  - [ ] `erase: [(node/edge/lane)]`
-  - [ ] `disable: [(node/edge/lane)]`
-  - [ ] `clear`
-  - [ ] `scroll: [fromTime]`
-- [ ] Render descriptions and step througheach diagrams
+  - [ ] Git commands
+    - [ ] `commit: [node, newNodeID, title]`
+    - [ ] `branch: [fromNode, newNodeID, lane, time, title]`
+    - [ ] `merge: [fromNode, newNodeID, lane, time, title]`
+    - [ ] `update: [node, title]`
+    - [ ] `cherrypick: [node, newNodeID, lane, time, title]` // copy node to somewhere
+    - [ ] `rebase: [oldBase, branch, ontoNewBase]`
+  - [ ] Diagram controls
+    - [ ] `lane: [laneID, afterLane, color, title]` // color in hex integer or a hex string
+    - [ ] `node: [nodeID, lane, time, title]` // create a node anywhere
+    - [ ] `connect: [edgeID, node1, node2, title?]` // connect any two nodes
+    - [ ] `animated: [(true/false/"pop")]`
+    - [ ] `erase: [(node/edge/lane)]` // wipe existence. other linked items will also be deleted
+    - [ ] `disable: [(node/edge/lane)]` // still show it but gray out
+    - [ ] `clear` // clear whole graph
+    - [ ] `scroll: [fromTime]`
+- [ ] Render descriptions and step through each diagrams
 - [ ] Support for animations
 
 
