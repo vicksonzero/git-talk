@@ -1,11 +1,12 @@
 
 export type Talk = {
     title: string;
+    authors: Array<string | { name: string, link: string }>;
     descriptions: string;
     aliases: string[];
-    relatedFlows: { name: string, link: string }[];
+    relatedFlows: Array<{ name: string, link: string }>;
     direction: 'up' | 'down' | 'left' | 'right';
-    laneLabel: 'start' | 'end';
+    branchLabels: 'start' | 'end';
     slides: Slide[];
 }
 
@@ -14,18 +15,6 @@ export type Slide = {
     descriptions: string;
     diagram: DiagramCommand[];
 }
-
-export type DiagramCommand = GitDiagramCommand | ControlsDiagramCommand;
-
-;
-
-export type GitDiagramCommand = CommitDiagramCommand
-    | ForkDiagramCommand
-    | MergeDiagramCommand
-    | UpdateDiagramCommand
-    | CherrypickDiagramCommand
-    | RebaseDiagramCommand
-    ;
 
 
 export type CommitDiagramCommand = {
@@ -46,16 +35,9 @@ export type CherrypickDiagramCommand = {
 export type RebaseDiagramCommand = {
     rebase: [oldBase: string, branch: string, ontoNewBase: string]
 }
+export type GitDiagramCommand = (CommitDiagramCommand | ForkDiagramCommand | MergeDiagramCommand | UpdateDiagramCommand | CherrypickDiagramCommand | RebaseDiagramCommand);
 
-export type ControlsDiagramCommand = BranchDiagramCommand
-    | NodeDiagramCommand
-    | ConnectDiagramCommand
-    | AnimatedDiagramCommand
-    | EraseDiagramCommand
-    | DisableDiagramCommand
-    | ClearDiagramCommand
-    | ScrollDiagramCommand
-    ;
+
 
 export type Color = string | number;
 
@@ -66,7 +48,7 @@ export type NodeDiagramCommand = {
     node: [nodeID: string, branch: string, time: number, title: string]
 }
 export type ConnectDiagramCommand = {
-    connect: [edgeID: string, node1: string, node2: string, title: string?]
+    connect: [edgeID: string, node1: string, node2: string, title?: string]
 }
 export type AnimatedDiagramCommand = {
     animated: [true | false | "pop"]
@@ -83,3 +65,6 @@ export type ClearDiagramCommand = {
 export type ScrollDiagramCommand = {
     scroll: [fromTime: number]
 }
+export type ControlsDiagramCommand = BranchDiagramCommand | NodeDiagramCommand | ConnectDiagramCommand | AnimatedDiagramCommand | EraseDiagramCommand | DisableDiagramCommand | ClearDiagramCommand | ScrollDiagramCommand;
+
+export type DiagramCommand = GitDiagramCommand | ControlsDiagramCommand;

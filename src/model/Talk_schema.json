@@ -1,0 +1,378 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "aliases": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "authors": {
+      "items": {
+        "anyOf": [
+          {
+            "properties": {
+              "link": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          {
+            "type": "string"
+          }
+        ]
+      },
+      "type": "array"
+    },
+    "branchLabels": {
+      "enum": [
+        "end",
+        "start"
+      ],
+      "type": "string"
+    },
+    "descriptions": {
+      "type": "string"
+    },
+    "direction": {
+      "enum": [
+        "down",
+        "left",
+        "right",
+        "up"
+      ],
+      "type": "string"
+    },
+    "relatedFlows": {
+      "items": {
+        "properties": {
+          "link": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "slides": {
+      "items": {
+        "properties": {
+          "descriptions": {
+            "type": "string"
+          },
+          "diagram": {
+            "items": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "commit": {
+                      "items": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ],
+                      "maxItems": 3,
+                      "minItems": 3,
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                },
+                {
+                  "properties": {
+                    "fork": {
+                      "items": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ],
+                      "maxItems": 5,
+                      "minItems": 5,
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                },
+                {
+                  "properties": {
+                    "merge": {
+                      "items": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ],
+                      "maxItems": 5,
+                      "minItems": 5,
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                },
+                {
+                  "properties": {
+                    "update": {
+                      "items": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ],
+                      "maxItems": 2,
+                      "minItems": 2,
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                },
+                {
+                  "properties": {
+                    "cherrypick": {
+                      "items": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ],
+                      "maxItems": 5,
+                      "minItems": 5,
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                },
+                {
+                  "properties": {
+                    "rebase": {
+                      "items": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ],
+                      "maxItems": 3,
+                      "minItems": 3,
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                },
+                {
+                  "properties": {
+                    "branch": {
+                      "items": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": [
+                            "string",
+                            "number"
+                          ]
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ],
+                      "maxItems": 4,
+                      "minItems": 4,
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                },
+                {
+                  "properties": {
+                    "node": {
+                      "items": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ],
+                      "maxItems": 4,
+                      "minItems": 4,
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                },
+                {
+                  "properties": {
+                    "connect": {
+                      "items": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ],
+                      "maxItems": 4,
+                      "minItems": 3,
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                },
+                {
+                  "properties": {
+                    "animated": {
+                      "items": [
+                        {
+                          "enum": [
+                            false,
+                            "pop",
+                            true
+                          ]
+                        }
+                      ],
+                      "maxItems": 1,
+                      "minItems": 1,
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                },
+                {
+                  "properties": {
+                    "erase": {
+                      "items": [
+                        {
+                          "type": "string"
+                        }
+                      ],
+                      "maxItems": 1,
+                      "minItems": 1,
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                },
+                {
+                  "properties": {
+                    "disable": {
+                      "items": [
+                        {
+                          "type": "string"
+                        }
+                      ],
+                      "maxItems": 1,
+                      "minItems": 1,
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                },
+                {
+                  "properties": {
+                    "clear": {
+                      "type": "null"
+                    }
+                  },
+                  "type": "object"
+                },
+                {
+                  "properties": {
+                    "scroll": {
+                      "items": [
+                        {
+                          "type": "number"
+                        }
+                      ],
+                      "maxItems": 1,
+                      "minItems": 1,
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "title": {
+      "type": "string"
+    }
+  },
+  "type": "object"
+}

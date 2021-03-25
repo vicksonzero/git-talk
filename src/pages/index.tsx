@@ -15,15 +15,17 @@ import ReactMarkdown from 'react-markdown';
 
 const useTalkMeta = ([talkData]: [Talk | null]) => {
   const [talkTitle, setTalkTitle] = useState('');
-  const [talkDescription, setTalkDescription] = useState('');
+  const [talkDescriptions, setTalkDescriptions] = useState('');
+  // const [talkAuthors, setTalkAuthors] = useState<string[]>([]);
 
   useEffect(() => {
     if (!talkData) return;
     setTalkTitle(talkData.title);
-    setTalkDescription(talkData.descriptions);
+    setTalkDescriptions(talkData.descriptions);
+    // setTalkAuthors(talkData.authors);
   }, [talkData]);
 
-  return [talkTitle, talkDescription];
+  return [talkTitle, talkDescriptions, /* talkAuthors */];
 }
 
 type UseTalkSlideReturns = [slideTitle: string, slideDescription: string, breadcrumbData: IBreadcrumbProps[]];
@@ -94,7 +96,7 @@ const IndexPage = () => {
   }, []);
 
   const [pageId, pageCount, canGoPrev, canGoNext, goPrev, goNext] = usePageCounter([talkData]);
-  const [talkTitle, talkDescription] = useTalkMeta([talkData]);
+  const [talkTitle, talkDescription, talkAuthors] = useTalkMeta([talkData]);
   const [slideTitle, slideDescription, breadcrumbData] = useTalkSlide([talkData, pageId]);
 
   const main = (talkDataYaml === '' ? <h1>Loading...</h1> : (
@@ -124,6 +126,10 @@ const IndexPage = () => {
           <ReactMarkdown>{slideDescription}</ReactMarkdown>
         </Col>
       </Row>
+      <div className={styles.footer}>
+        <p>Git-talk unites all git workflow discussions. It is a project by <a href="https://dickson.md">Dickson Chui</a></p>
+        <p><a href="https://github.com/vicksonzero/git-talk">Fork me on GitHub!</a></p>
+      </div>
     </>
   ));
 
