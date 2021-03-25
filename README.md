@@ -11,18 +11,18 @@ Talk about your git strategy with this standardized presentation tool
 - [ ] Construct a git tree in SVG by a series of events / commands:
   - [ ] Git commands
     - [ ] `commit: [node, newNodeID, title]`
-    - [ ] `branch: [fromNode, newNodeID, lane, time, title]`
-    - [ ] `merge: [fromNode, newNodeID, lane, time, title]`
+    - [ ] `fork: [fromNode, newNodeID, branch, time, title]`
+    - [ ] `merge: [fromNode, newNodeID, branch, time, title]`
     - [ ] `update: [node, title]`
-    - [ ] `cherrypick: [node, newNodeID, lane, time, title]` // copy node to somewhere
+    - [ ] `cherrypick: [node, newNodeID, branch, time, title]` // copy node to somewhere
     - [ ] `rebase: [oldBase, branch, ontoNewBase]`
   - [ ] Diagram controls
-    - [ ] `lane: [laneID, afterLane, color, title]` // color in hex integer or a hex string
-    - [ ] `node: [nodeID, lane, time, title]` // create a node anywhere
+    - [ ] `branch: [branchID, afterBranch, color, title]` // color in hex integer or a hex string
+    - [ ] `node: [nodeID, branch, time, title]` // create a node anywhere
     - [ ] `connect: [edgeID, node1, node2, title?]` // connect any two nodes
     - [ ] `animated: [(true/false/"pop")]`
-    - [ ] `erase: [(node/edge/lane)]` // wipe existence. other linked items will also be deleted
-    - [ ] `disable: [(node/edge/lane)]` // still show it but gray out
+    - [ ] `erase: [(node/edge/branch)]` // wipe existence. other linked items will also be deleted
+    - [ ] `disable: [(node/edge/branch)]` // still show it but gray out
     - [ ] `clear` // clear whole graph
     - [ ] `scroll: [fromTime]`
 - [ ] Render descriptions and step through each diagrams

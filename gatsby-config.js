@@ -3,24 +3,24 @@ module.exports = {
     title: "git-talk",
   },
   plugins: [
-    "gatsby-plugin-styled-components",
-    "gatsby-plugin-sass",
+    `gatsby-plugin-typescript`,
+    `gatsby-plugin-sass`,
     {
-      resolve: "gatsby-plugin-google-analytics",
+      resolve: `gatsby-plugin-google-analytics`,
       options: {
-        trackingId: "266387832",
+        trackingId: `266387832`,
       },
     },
-    "gatsby-plugin-react-helmet",
-    "gatsby-plugin-sitemap",
-    "gatsby-plugin-mdx",
+    `gatsby-plugin-react-helmet`,
+    `gatsby-plugin-sitemap`,
+    `gatsby-plugin-mdx`,
     {
-      resolve: "gatsby-source-filesystem",
+      resolve: `gatsby-source-filesystem`,
       options: {
-        name: "pages",
-        path: "./src/pages/",
+        name: `pages`,
+        path: `./src/pages/`,
       },
-      __key: "pages",
+      __key: `pages`,
     },
   ],
 };
