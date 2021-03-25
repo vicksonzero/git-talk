@@ -25,6 +25,8 @@ Talk about your git strategy with this standardized presentation tool
     - [ ] `disable: [(node/edge/lane)]` // still show it but gray out
     - [ ] `clear` // clear whole graph
     - [ ] `scroll: [fromTime]`
+    - [ ] `zoom: level`
+    - [ ] `focus: (node/edge/lane)`
 - [ ] Render descriptions and step through each diagrams
 - [ ] Support for animations
 
