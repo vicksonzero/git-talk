@@ -11,6 +11,7 @@ import { AnchorButton, Breadcrumbs, Button, ButtonGroup, Card, Elevation, IBread
 import * as styles from './index.module.scss';
 import type { Talk } from '../model/Talk';
 import ReactMarkdown from 'react-markdown';
+import { Graph } from '../components/Graph/Graph';
 
 
 const useTalkMeta = ([talkData]: [Talk | null]) => {
@@ -110,7 +111,7 @@ const IndexPage = () => {
       <Row>
         <Col>
           <Card elevation={Elevation.TWO} className={styles.leftCard}>
-            hi card
+            <Graph />
           </Card>
           <div className={styles.toolbar}>
             <ButtonGroup>
