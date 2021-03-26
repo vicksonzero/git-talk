@@ -8,7 +8,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { AnchorButton, Breadcrumbs, Button, ButtonGroup, Card, Elevation, IBreadcrumbProps } from '@blueprintjs/core';
-import * as styles from './index.module.scss';
+import styles from './index.module.scss';
 import type { DiagramCommand, Talk } from '../model/Talk';
 import ReactMarkdown from 'react-markdown';
 import { Graph } from '../components/Graph/Graph';
@@ -29,7 +29,7 @@ const useTalkMeta = ([talkData]: [Talk | null]) => {
   return [talkTitle, talkDescriptions, /* talkAuthors */];
 }
 
-type UseTalkSlideReturns = [slideTitle: string, slideDescription: string, breadcrumbData: IBreadcrumbProps[], slideDiagram: DiagramCommand[]];
+type UseTalkSlideReturns = [slideTitle: string, slideDescription: string, breadcrumbData: IBreadcrumbProps[]];
 const useTalkSlide = ([talkData, slideId]: [Talk | null, number]): UseTalkSlideReturns => {
   const [slideTitle, setSlideTitle] = useState('');
   const [slideDescription, setSlideDescription] = useState('');

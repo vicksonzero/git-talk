@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { CommitDiagramCommand, Talk, ForkDiagramCommand, MergeDiagramCommand, UpdateDiagramCommand, CherrypickDiagramCommand, RebaseDiagramCommand, BranchDiagramCommand, NodeDiagramCommand, ConnectDiagramCommand, AnimatedDiagramCommand, EraseDiagramCommand, DisableDiagramCommand, ClearDiagramCommand, ScrollDiagramCommand, Color } from '../../model/Talk';
-import * as styles from './Graph.module.scss';
+import styles from './Graph.module.scss';
 
 type GraphProps = {
     talkData: Talk;
