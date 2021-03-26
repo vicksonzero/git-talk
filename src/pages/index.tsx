@@ -9,7 +9,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { AnchorButton, Breadcrumbs, Button, ButtonGroup, Card, Elevation, IBreadcrumbProps } from '@blueprintjs/core';
 import * as styles from './index.module.scss';
-import type { Talk } from '../model/Talk';
+import type { DiagramCommand, Talk } from '../model/Talk';
 import ReactMarkdown from 'react-markdown';
 import { Graph } from '../components/Graph/Graph';
 
@@ -29,7 +29,7 @@ const useTalkMeta = ([talkData]: [Talk | null]) => {
   return [talkTitle, talkDescriptions, /* talkAuthors */];
 }
 
-type UseTalkSlideReturns = [slideTitle: string, slideDescription: string, breadcrumbData: IBreadcrumbProps[]];
+type UseTalkSlideReturns = [slideTitle: string, slideDescription: string, breadcrumbData: IBreadcrumbProps[], slideDiagram: DiagramCommand[]];
 const useTalkSlide = ([talkData, slideId]: [Talk | null, number]): UseTalkSlideReturns => {
   const [slideTitle, setSlideTitle] = useState('');
   const [slideDescription, setSlideDescription] = useState('');
@@ -81,7 +81,7 @@ const usePageCounter = ([talkData]: [Talk | null]): UsePageCounterReturns => {
 // markup
 const IndexPage = () => {
   const [talkDataYaml, setTalkDataYaml] = useState('');
-  const [talkData, setTalkData] = useState(null);
+  const [talkData, setTalkData] = useState<Talk | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -111,18 +111,18 @@ const IndexPage = () => {
       <Row>
         <Col>
           <Card elevation={Elevation.TWO} className={styles.leftCard}>
-            <Graph />
+            {talkData && <Graph talkData={talkData} pageId={pageId} />}
           </Card>
           <div className={styles.toolbar}>
             <ButtonGroup>
               <Button icon="caret-left" disabled={!canGoPrev} onClick={goPrev}>Prev</Button>
-              <Button icon="repeat">Replay</Button>
-              <Button icon="edit">Edit</Button>
+              <Button icon="repeat" disabled={true}>Replay</Button>
+              <Button icon="edit" disabled={true}>Edit</Button>
               <Button rightIcon="caret-right" disabled={!canGoNext} onClick={goNext}>Next</Button>
             </ButtonGroup>
           </div>
         </Col>
-        <Col>
+        <Col className={styles.fadeIn1s} key={pageId}>
           <h2 className="bp3-heading">{slideTitle}</h2>
           <ReactMarkdown>{slideDescription}</ReactMarkdown>
         </Col>

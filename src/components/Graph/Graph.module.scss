@@ -1,0 +1,19 @@
+.branchTitleLabel {
+    text-anchor: middle;
+    alignment-baseline: middle;
+    fill: white;
+}
+
+.edgeTitleLabel {
+    text-anchor: middle;
+    alignment-baseline: middle;
+    fill: black;
+}
+
+.nodeTitleLabel{
+    fill: black;
+    text-anchor: start;
+    alignment-baseline: middle;
+    // transform: rotate(-45deg);
+    transform: translateX(10px);
+}

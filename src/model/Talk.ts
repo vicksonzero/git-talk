@@ -6,7 +6,7 @@ export type Talk = {
     aliases: string[];
     relatedFlows: Array<{ name: string, link: string }>;
     direction: 'up' | 'down' | 'left' | 'right';
-    branchLabels: 'start' | 'end';
+    branchLabelDir: 'start' | 'end';
     slides: Slide[];
 }
 
@@ -39,7 +39,7 @@ export type GitDiagramCommand = (CommitDiagramCommand | ForkDiagramCommand | Mer
 
 
 
-export type Color = string | number;
+export type Color = string;
 
 export type BranchDiagramCommand = {
     branch: [branchID: string, afterBranch: string, color: Color, title: string]
@@ -48,7 +48,7 @@ export type NodeDiagramCommand = {
     node: [nodeID: string, branch: string, time: number, title: string]
 }
 export type ConnectDiagramCommand = {
-    connect: [edgeID: string, node1: string, node2: string, title?: string]
+    connect: [edgeID: string, node1: string, node2: string, isMerge: boolean, title?: string]
 }
 export type AnimatedDiagramCommand = {
     animated: [true | false | "pop"]
