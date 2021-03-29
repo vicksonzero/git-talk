@@ -1,19 +1,21 @@
 import React, { useMemo, useState } from 'react';
 import { CommitDiagramCommand, Talk, ForkDiagramCommand, MergeDiagramCommand, UpdateDiagramCommand, CherrypickDiagramCommand, RebaseDiagramCommand, BranchDiagramCommand, NodeDiagramCommand, ConnectDiagramCommand, AnimatedDiagramCommand, EraseDiagramCommand, DisableDiagramCommand, ClearDiagramCommand, ScrollDiagramCommand, Color } from '../../model/Talk';
-import styles from './Graph.module.scss';
+import * as styles from './Graph.module.scss';
 
 type GraphProps = {
     talkData: Talk;
     pageId: number;
+    stepID: number;
 };
 
 export const Graph = (props: GraphProps) => {
-    const { talkData, pageId } = props;
+    const { talkData, pageId, stepID } = props;
 
     const BRANCH_WIDTH = 70;
     const BRANCH_GAP = 10;
     const BRANCH_OPACITY = 0.1;
     const TIME_HEIGHT = 40;
+    const PATH_LEAD = TIME_HEIGHT / 2;
     const DIAGRAM_MIN_HEIGHT = 500;
     const LINE_WIDTH = 3;
     const DOT_RADIUS = 7;
@@ -44,7 +46,8 @@ export const Graph = (props: GraphProps) => {
             edges: [...oldContent.edges] as Edge[],
         };
 
-        for (const cmd of diagram) {
+        for (let i = 0; i < stepID; i++) {
+            const cmd = diagram[i];
             // git operations
             if ((cmd as CommitDiagramCommand).commit) {
                 const [node, newNodeID, title] = (cmd as CommitDiagramCommand).commit;
@@ -101,7 +104,7 @@ export const Graph = (props: GraphProps) => {
             if ((cmd as BranchDiagramCommand).branch) {
                 const [branchID, afterBranch, color, title] = (cmd as BranchDiagramCommand).branch;
                 const newBranch: Branch = { branchID, color, title, x: 0 };
-                const afterBranchIndex = (diagramStore.branches.findIndex(b => b.title === afterBranch) ?? -1) + 1;
+                const afterBranchIndex = (diagramStore.branches.findIndex(b => b.branchID === afterBranch) ?? -1) + 1;
                 diagramStore.branches.splice(afterBranchIndex, 0, newBranch);
             }
             if ((cmd as NodeDiagramCommand).node) {
@@ -191,35 +194,49 @@ export const Graph = (props: GraphProps) => {
                 </g>
                 <g id="edges">
                     {diagramStore.edges.map((e, i) => {
-                        const { edgeID, node1, node2, title, fromX, fromY, toX, toY, color } = e;
+                        const { edgeID, node1, node2, title, fromX, fromY, toX, toY, color, isMerge } = e;
 
                         let line = <line x1={fromX} y1={fromY} x2={toX} y2={toY} stroke={color} strokeWidth={LINE_WIDTH} />
-                        // if (fromX !== toX) {
-
-                        //     const escapeX = SIDEBAR_X + hashStringToNumber(name) * SIDEBAR_WIDTH;
-                        //     const MOMENTUM = 5;
-                        //     const SIDEBAR_LEAD = 5;
-                        //     const curve1 = [
-                        //         `${fromX + MOMENTUM} ${fromY}`,
-                        //         `${fromX + SIDEBAR_LEAD - MOMENTUM} ${fromY}`,
-                        //         `${fromX + SIDEBAR_LEAD} ${fromY}`,
-                        //     ].join(', ');
-
-                        //     const curve2 = [
-                        //         `${toX - SIDEBAR_LEAD + MOMENTUM} ${toY}`,
-                        //         `${toX - MOMENTUM} ${toY}`,
-                        //         `${toX} ${toY}`,
-                        //     ].join(', ');
-
-                        //     const pathStr = [
-                        //         `M`, `${fromX} ${fromY}`,
-                        //         `C`, curve1,
-                        //         `L`, `${fromX} ${toY}`,
-                        //         `C`, curve2,
-                        //     ].join(' ');
-                        //     console.log(pathStr);
-                        //     line = <path d={pathStr} stroke={color} strokeWidth={LINE_WIDTH} fill={undefined} />
-                        // }
+                        if (fromX !== toX) {
+                            const dir = Math.sign(toX - fromX);
+                            const pathStr = (isMerge ?
+                                [
+                                    `M`, `${fromX} ${fromY}`,
+                                    (`L ${fromX},${toY + TIME_HEIGHT}`),
+                                    `C`, [
+                                        `${fromX},${toY + PATH_LEAD}`,
+                                        `${fromX},${toY + PATH_LEAD}`,
+                                        `${fromX + PATH_LEAD * dir},${toY + PATH_LEAD}`,
+                                    ].join(' '),
+                                    `L`, `${toX - PATH_LEAD * dir},${toY + PATH_LEAD}`,
+                                    `C`, [
+                                        `${toX},${toY + PATH_LEAD}`,
+                                        `${toX},${toY + PATH_LEAD}`,
+                                        `${toX},${toY}`,
+                                    ].join(' '),
+                                    (''),
+                                ].join(' ')
+                                :
+                                [
+                                    `M`, `${fromX} ${fromY}`,
+                                    (''),
+                                    `C`, [
+                                        `${fromX},${fromY - PATH_LEAD}`,
+                                        `${fromX},${fromY - PATH_LEAD}`,
+                                        `${fromX + PATH_LEAD * dir},${fromY - PATH_LEAD}`,
+                                    ].join(' '),
+                                    `L`, `${toX - PATH_LEAD * dir},${fromY - PATH_LEAD}`,
+                                    `C`, [
+                                        `${toX},${fromY - PATH_LEAD}`,
+                                        `${toX},${fromY - PATH_LEAD}`,
+                                        `${toX},${fromY - TIME_HEIGHT}`,
+                                    ].join(' '),
+                                    (`L ${toX},${toY}`),
+                                ].join(' ')
+                            );
+                            console.log(pathStr);
+                            line = <path d={pathStr} stroke={color} strokeWidth={LINE_WIDTH} fill="#00000000" />
+                        }
                         return (
                             <g data-type="edge" data-name={edgeID} key={edgeID}>
                                 {line}
@@ -234,6 +251,7 @@ export const Graph = (props: GraphProps) => {
                         return (
                             <g data-type="node" data-name={nodeID} key={nodeID}>
                                 <circle cx={x} cy={y} r={DOT_RADIUS} stroke="white" strokeWidth={DOT_STROKE_WIDTH} fill={color} />
+                                <text x={x} y={y} className={[styles.nodeTitleLabel, styles.border].join(' ')}>{title}</text>
                                 <text x={x} y={y} className={styles.nodeTitleLabel}>{title}</text>
                             </g>
                         );

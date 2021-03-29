@@ -10,10 +10,17 @@
     fill: black;
 }
 
-.nodeTitleLabel{
+.nodeTitleLabel {
     fill: black;
     text-anchor: start;
     alignment-baseline: middle;
     // transform: rotate(-45deg);
     transform: translateX(10px);
+
+    &.border {
+        stroke: white;
+        stroke-width: 3px;
+        pointer-events: none;
+        user-select: none;
+    }
 }

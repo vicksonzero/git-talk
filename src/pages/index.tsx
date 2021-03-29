@@ -8,7 +8,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { AnchorButton, Breadcrumbs, Button, ButtonGroup, Card, Elevation, IBreadcrumbProps } from '@blueprintjs/core';
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 import type { DiagramCommand, Talk } from '../model/Talk';
 import ReactMarkdown from 'react-markdown';
 import { Graph } from '../components/Graph/Graph';
