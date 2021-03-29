@@ -1,15 +1,31 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { CommitDiagramCommand, Talk, ForkDiagramCommand, MergeDiagramCommand, UpdateDiagramCommand, CherrypickDiagramCommand, RebaseDiagramCommand, BranchDiagramCommand, NodeDiagramCommand, ConnectDiagramCommand, AnimatedDiagramCommand, EraseDiagramCommand, DisableDiagramCommand, ClearDiagramCommand, ScrollDiagramCommand, Color } from '../../model/Talk';
 import * as styles from './Graph.module.scss';
+
+type Branch = { branchID: string, color: Color, title: string, x: number }
+type Node = { nodeID: string, branch: string, time: number, title: string, x: number, y: number, color: Color }
+type Edge = { edgeID: string, node1: string, node2: string, isMerge: boolean, title: string, fromX: number, fromY: number, toX: number, toY: number, color: Color }
+
+type DiagramStore = {
+    branches: Branch[],
+    nodes: Node[],
+    edges: Edge[],
+    ids: string[],
+}
 
 type GraphProps = {
     talkData: Talk;
     pageId: number;
-    stepID: number;
 };
 
 export const Graph = (props: GraphProps) => {
-    const { talkData, pageId, stepID } = props;
+    const { talkData, pageId } = props;
+
+    const [stepID, setStepID] = useState(0);
+
+    useEffect(() => {
+        setStepID(0);
+    }, [talkData, pageId]);
 
     const BRANCH_WIDTH = 70;
     const BRANCH_GAP = 10;
@@ -24,17 +40,14 @@ export const Graph = (props: GraphProps) => {
     const diagramDirection = talkData.direction;
     const labelDirection = talkData.branchLabelDir;
 
-    type Branch = { branchID: string, color: Color, title: string, x: number }
-    type Node = { nodeID: string, branch: string, time: number, title: string, x: number, y: number, color: Color }
-    type Edge = { edgeID: string, node1: string, node2: string, isMerge: boolean, title: string, fromX: number, fromY: number, toX: number, toY: number, color: Color }
-
-    const [cache, setCache] = useState<{ [x: string]: { branches: Branch[], nodes: Node[], edges: Edge[], } }>({});
+    const [cache, setCache] = useState<{ [x: string]: DiagramStore }>({});
 
     const content = useMemo<React.SVGProps<SVGElement>[] | JSX.Element>(() => {
         const oldContent = cache['' + (pageId - 1)] ?? {
             branches: [] as Branch[],
             nodes: [] as Node[],
             edges: [] as Edge[],
+            ids: [] as string[],
         };
 
         console.log('oldContent', oldContent);
@@ -44,6 +57,7 @@ export const Graph = (props: GraphProps) => {
             branches: [...oldContent.branches] as Branch[],
             nodes: [...oldContent.nodes] as Node[],
             edges: [...oldContent.edges] as Edge[],
+            ids: [...oldContent.ids] as string[],
         };
 
         for (let i = 0; i < stepID; i++) {
@@ -56,6 +70,8 @@ export const Graph = (props: GraphProps) => {
                 const [node, newNodeID, title] = (cmd as CommitDiagramCommand).commit;
                 const commitOldNode = diagramStore.nodes.find(n => n.nodeID === node);
                 if (!commitOldNode) throw new Error(`Command "commit": source node "${node}" not found.`);
+                if (diagramStore.ids.includes(newNodeID)) throw new Error(`Duplicate id "${newNodeID}". Please use a unique ID for every branch, nodes, edges, etc.`);
+                diagramStore.ids.push(newNodeID);
 
                 const newNode: Node = { nodeID: newNodeID, branch: commitOldNode.branch, time: commitOldNode.time + 1, title, x: 0, y: 0, color: 'black' };
                 diagramStore.nodes.push(newNode);
@@ -66,6 +82,8 @@ export const Graph = (props: GraphProps) => {
                 const [fromNode, newNodeID, branch, time, title] = (cmd as ForkDiagramCommand).fork;
                 const commitOldNode = diagramStore.nodes.find(n => n.nodeID === fromNode);
                 if (!commitOldNode) throw new Error(`Command "fork": source node "${fromNode}" not found.`);
+                if (diagramStore.ids.includes(newNodeID)) throw new Error(`Duplicate id "${newNodeID}". Please use a unique ID for every branch, nodes, edges, etc.`);
+                diagramStore.ids.push(newNodeID);
 
                 const newNode: Node = { nodeID: newNodeID, branch: branch, time, title, x: 0, y: 0, color: 'black' };
                 diagramStore.nodes.push(newNode);
@@ -78,16 +96,28 @@ export const Graph = (props: GraphProps) => {
                 if (!commitOldNode) throw new Error(`Command "merge": source node "${fromNode}" not found.`);
                 const commitNewNode = diagramStore.nodes.find(n => n.nodeID === fromNode);
                 if (!commitNewNode) throw new Error(`Command "merge": new node "${newNodeID}" conflicts with existing node "${newNodeID}". Must use a unique name`);
+
                 const mergeParentNodes = diagramStore.nodes.filter(n => n.branch === branch);
                 const mergeParentTime = mergeParentNodes.reduce((acc, n) => Math.max(acc, n.time), 0);
                 const mergeParentNode = mergeParentNodes.find(n => n.time === mergeParentTime);
                 if (!mergeParentNode) throw new Error(`Command "merge": new node "${newNodeID}" cannot find a parent node to merge into branch "${branch}"`);
 
+                if (diagramStore.ids.includes(newNodeID)) throw new Error(`Duplicate id "${newNodeID}". Please use a unique ID for every branch, nodes, edges, etc.`);
+                diagramStore.ids.push(newNodeID);
+
                 const newNode: Node = { nodeID: newNodeID, branch: branch, time, title, x: 0, y: 0, color: 'black' };
                 diagramStore.nodes.push(newNode);
-                const newEdge = { edgeID: `auto_edge: ${fromNode}-${newNodeID}`, node1: fromNode, node2: newNodeID, isMerge: true, title: '', fromX: 0, fromY: 0, toX: 0, toY: 0, color: 'black' };
+
+                const newEdgeID = `auto_edge: ${fromNode}-${newNodeID}`;
+                if (diagramStore.ids.includes(newEdgeID)) throw new Error(`Duplicate id "${newEdgeID}". Please use a unique ID for every branch, nodes, edges, etc.`);
+                diagramStore.ids.push(newEdgeID);
+                const newEdge = { edgeID: newEdgeID, node1: fromNode, node2: newNodeID, isMerge: true, title: '', fromX: 0, fromY: 0, toX: 0, toY: 0, color: 'black' };
                 diagramStore.edges.push(newEdge);
-                const newEdge2 = { edgeID: `auto_edge: ${mergeParentNode.nodeID}-${newNodeID}`, node1: mergeParentNode.nodeID, node2: newNodeID, isMerge: true, title: '', fromX: 0, fromY: 0, toX: 0, toY: 0, color: 'black' };
+
+                const newEdgeID2 = `auto_edge: ${mergeParentNode.nodeID}-${newNodeID}`;
+                if (diagramStore.ids.includes(newEdgeID2)) throw new Error(`Duplicate id "${newEdgeID2}". Please use a unique ID for every branch, nodes, edges, etc.`);
+                diagramStore.ids.push(newEdgeID2);
+                const newEdge2 = { edgeID: newEdgeID2, node1: mergeParentNode.nodeID, node2: newNodeID, isMerge: true, title: '', fromX: 0, fromY: 0, toX: 0, toY: 0, color: 'black' };
                 diagramStore.edges.push(newEdge2);
             }
             if ((cmd as UpdateDiagramCommand).update) {
@@ -103,17 +133,25 @@ export const Graph = (props: GraphProps) => {
             // controls
             if ((cmd as BranchDiagramCommand).branch) {
                 const [branchID, afterBranch, color, title] = (cmd as BranchDiagramCommand).branch;
+                if (diagramStore.ids.includes(branchID)) throw new Error(`Duplicate id "${branchID}". Please use a unique ID for every branch, nodes, edges, etc.`);
+                diagramStore.ids.push(branchID);
                 const newBranch: Branch = { branchID, color, title, x: 0 };
                 const afterBranchIndex = (diagramStore.branches.findIndex(b => b.branchID === afterBranch) ?? -1) + 1;
                 diagramStore.branches.splice(afterBranchIndex, 0, newBranch);
             }
             if ((cmd as NodeDiagramCommand).node) {
                 const [nodeID, branch, time, title] = (cmd as NodeDiagramCommand).node;
+                if (diagramStore.ids.includes(nodeID)) throw new Error(`Duplicate id "${nodeID}". Please use a unique ID for every branch, nodes, edges, etc.`);
+                diagramStore.ids.push(nodeID);
+
                 const newNode: Node = { nodeID, branch, time, title, x: 0, y: 0, color: 'black' };
                 diagramStore.nodes.push(newNode);
             }
             if ((cmd as ConnectDiagramCommand).connect) {
                 const [edgeID, node1, node2, isMerge, title = ''] = (cmd as ConnectDiagramCommand).connect;
+                if (diagramStore.ids.includes(edgeID)) throw new Error(`Duplicate id "${edgeID}". Please use a unique ID for every branch, nodes, edges, etc.`);
+                diagramStore.ids.push(edgeID);
+
                 const newEdge = { edgeID, node1, node2, isMerge, title, fromX: 0, fromY: 0, toX: 0, toY: 0, color: 'black' };
                 diagramStore.edges.push(newEdge);
             }
@@ -261,7 +299,7 @@ export const Graph = (props: GraphProps) => {
         );
 
         return newContent;
-    }, [talkData, pageId]);
+    }, [talkData, pageId, stepID]);
 
     return (
         <svg width={500} height={500}>
